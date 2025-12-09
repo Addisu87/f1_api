@@ -1,9 +1,25 @@
 Rails.application.routes.draw do
-  resources :lap_times
-  resources :circuits
-  resources :drivers
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
+
+  namespace :api do
+    namespace :v1 do
+      devise_for :users
+      resources :drivers
+      resources :circuits
+      resources :lap_times do
+        collection do
+          get :fastest
+        end
+      end
+
+      get "standings", to: "standings#index"
+    end
+  end
+
+  # Admin dashboard
+  get "admin", to: "admin/dashboard#index"
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -15,5 +31,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "home#index"
 end

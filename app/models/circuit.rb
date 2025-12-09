@@ -1,3 +1,3 @@
 class Circuit < ApplicationRecord
-  has_many :lap_times
+  has_many :lap_times,  dependent: :destroy
 end

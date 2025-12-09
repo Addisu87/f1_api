@@ -16,6 +16,11 @@ Things you may want to cover:
 * Database initialization
 rails db:create
 rails db:migrate
+rails db:seed
+rails db:drop
+
+
+psql -U postgres -d formula1db
 
 
 * How to run the test suite
@@ -29,6 +34,7 @@ Then visit:
 http://localhost:3000/api-docs
 
 
+rails console
 
 * Services (job queues, cache servers, search engines, etc.)
 
