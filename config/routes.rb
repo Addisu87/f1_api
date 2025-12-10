@@ -4,10 +4,16 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      devise_for :users, controllers: {
-        sessions: "api/v1/users/sessions",
-        registrations: "api/v1/users/registrations"
-      }
+      devise_for :users,
+        path: "auth",
+        path_names: {
+          sign_in: "login",
+          sign_out: "logout",
+          registration: "register" },
+        controllers: {
+          sessions: "api/v1/users/sessions",
+          registrations: "api/v1/users/registrations"
+        }
       resources :drivers
       resources :circuits
       resources :lap_times do
@@ -21,7 +27,7 @@ Rails.application.routes.draw do
   end
 
   # Admin dashboard
-  get "admin", to: "admin/dashboard#index"
+  # get "admin", to: "admin/dashboard#index"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

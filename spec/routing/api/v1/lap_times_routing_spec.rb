@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe LapTimesController, type: :routing do
+RSpec.describe Api::V1::LapTimesController, type: :routing do
   describe "routing" do
     it "routes to #index" do
       expect(get: "/lap_times").to route_to("lap_times#index")

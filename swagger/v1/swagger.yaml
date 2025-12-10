@@ -442,6 +442,73 @@ paths:
                   - circuit_id
                   - time_ms
                   - lap_number
+  "/api/v1/auth/register":
+    post:
+      summary: Register a new user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: user registered
+        '422':
+          description: registration failed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
+  "/api/v1/auth/login":
+    post:
+      summary: Login user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: login successful
+        '401':
+          description: login failed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  required:
+                  - email
+                  - password
+  "/api/v1/auth/logout":
+    delete:
+      summary: Logout user
+      tags:
+      - Users
+      responses:
+        '200':
+          description: logout successful
+        '401':
+          description: logout failed
 components:
   securitySchemes:
     bearer_auth:

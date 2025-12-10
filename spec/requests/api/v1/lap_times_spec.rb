@@ -1,4 +1,3 @@
-# spec/requests/api/v1/lap_times_spec.rb
 require 'swagger_helper'
 
 RSpec.describe 'Lap Times API', type: :request do

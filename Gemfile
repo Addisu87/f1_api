@@ -60,23 +60,23 @@ group :development do
 end
 
 # Authentication
-gem 'devise'
-gem 'devise-jwt'
+gem "devise"
+gem "devise-jwt"
 
 # Serializers
 gem "active_model_serializers"
 
 # Testing
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'faker'
+  gem "rspec-rails"
+  gem "faker"
 end
 
 # API documentation
-gem 'rswag'
+gem "rswag"
 
 # CORS
-gem 'rack-cors'
+gem "rack-cors"
 
 # Optional: tailwind for UI
-gem "tailwindcss-rails", "~> 4.0" 
+gem "tailwindcss-rails", "~> 4.0"

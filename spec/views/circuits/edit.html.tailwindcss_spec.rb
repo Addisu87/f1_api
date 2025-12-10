@@ -16,7 +16,6 @@ RSpec.describe "circuits/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", circuit_path(circuit), "post" do
-
       assert_select "input[name=?]", "circuit[name]"
 
       assert_select "input[name=?]", "circuit[location]"

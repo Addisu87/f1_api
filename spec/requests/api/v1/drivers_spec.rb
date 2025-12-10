@@ -1,4 +1,3 @@
-# spec/requests/api/v1/drivers_spec.rb
 require 'swagger_helper'
 
 RSpec.describe 'Drivers API', type: :request do

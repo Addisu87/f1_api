@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe DriversController, type: :routing do
+RSpec.describe Api::V1::DriversController, type: :routing do
   describe "routing" do
     it "routes to #index" do
       expect(get: "/drivers").to route_to("drivers#index")

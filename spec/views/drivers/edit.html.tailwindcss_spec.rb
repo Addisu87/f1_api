@@ -17,7 +17,6 @@ RSpec.describe "drivers/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", driver_path(driver), "post" do
-
       assert_select "input[name=?]", "driver[name]"
 
       assert_select "input[name=?]", "driver[code]"

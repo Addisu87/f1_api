@@ -8,6 +8,27 @@ RSpec.configure do |config|
 end
 
 module ApiSchemas
+  USER_SCHEMA = {
+    type: :object,
+    properties: {
+      id: { type: :integer },
+      email: { type: :string },
+      created_at: { type: :string, format: "date-time" },
+      updated_at: { type: :string, format: "date-time" }
+    },
+    required: %w[id email]
+  }.freeze
+
+  AUTH_RESPONSE_SCHEMA = {
+    type: :object,
+    properties: {
+      message: { type: :string },
+      user: USER_SCHEMA
+    },
+    required: %w[message user]
+  }.freeze
+
+
   Driver = {
     type: :object,
     properties: {

@@ -1,6 +1,6 @@
 
 class Api::V1::CircuitsController < ApplicationController
-  # before_action :authenticate_user!
+    # before_action :authenticate_user!
     before_action :set_circuit, only: %i[ show edit update destroy ]
     respond_to :json
 
@@ -57,4 +57,4 @@ class Api::V1::CircuitsController < ApplicationController
       def circuit_params
         params.require(:circuit).permit(:name, :location, :length_km)
       end
-  end
+end

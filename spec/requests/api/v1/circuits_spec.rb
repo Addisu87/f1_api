@@ -1,4 +1,3 @@
-# spec/requests/api/v1/circuits_spec.rb
 require 'swagger_helper'
 
 RSpec.describe 'Circuits API', type: :request do
