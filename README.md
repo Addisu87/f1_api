@@ -5,40 +5,39 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+- Ruby version
 
-* System dependencies
+- System dependencies
 
-* Configuration
+- Configuration
 
-* Database creation
+- Database creation
+  rails db:create
 
-* Database initialization
-rails db:create
-rails db:migrate
-rails db:seed
-rails db:drop
+- Database initialization
+  bin/rails db:migrate
+  rails db:seed
+  rails db:drop
 
 bundle exec rails db:migrate
 
-
 psql -U postgres -d formula1db
 
+- How to run the test suite
+  rails generate rspec:install
 
-* How to run the test suite
-rails generate rspec:install
-
-* Generate swagger docs
-bundle exec rspec
-bundle exec rake rswag:specs:swaggerize
+- Generate swagger docs
+  bundle exec rspec
+  bundle exec rake rswag:specs:swaggerize
 
 Then visit:
 http://localhost:3000/api-docs
 
+- start your app
+  bin/rails server
 
-rails console
-
-rails server 
+- to debug your app
+  rails console
 
 * Services (job queues, cache servers, search engines, etc.)
 

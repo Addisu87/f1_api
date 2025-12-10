@@ -40,6 +40,7 @@ RSpec.configure do |config|
           }
         }
       },
+      security: [ { bearerAuth: [] } ],
       servers: [
         {
           url: 'https://{defaultHost}',

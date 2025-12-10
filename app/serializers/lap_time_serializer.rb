@@ -1,5 +1,5 @@
 class LapTimeSerializer < ActiveModel::Serializer
-  attributes :id, :lap_number, :time
+  attributes :id, :lap_number, :time_ms
   has_one :driver
   has_one :circuit
 end
