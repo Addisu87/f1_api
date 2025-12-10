@@ -18,10 +18,28 @@ RSpec.configure do |config|
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
       info: {
-        title: 'API V1',
-        version: 'v1'
+        title: 'F1 Laps API',
+        version: 'v1',
+        description: 'API for accessing Formula 1 lap time data and analytics',
+        contact: {
+          name: 'API Support',
+          email: 'support@f1laps.com'
+        },
+        license: {
+          name: 'MIT',
+          url: 'https://opensource.org/licenses/MIT'
+        }
       },
       paths: {},
+      components: {
+        securitySchemes: {
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer,
+            bearerFormat: 'JWT'
+          }
+        }
+      },
       servers: [
         {
           url: 'https://{defaultHost}',

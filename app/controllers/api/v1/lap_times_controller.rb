@@ -22,7 +22,7 @@ module Api
         render json: @lap_time
       end
 
-      # POST /lap_times or /lap_times.json
+      # POST /lap_times
       def create
         @lap_time = LapTime.new(lap_time_params)
 
@@ -35,7 +35,7 @@ module Api
         end
       end
 
-      # PATCH/PUT /lap_times/1 or /lap_times/1.json
+      # PATCH/PUT /lap_times/1
       def update
         respond_to do |format|
           if @lap_time.update(lap_time_params)
@@ -46,7 +46,7 @@ module Api
         end
       end
 
-      # DELETE /lap_times/1 or /lap_times/1.json
+      # DELETE /lap_times/1
       def destroy
         @lap_time.destroy
         head :no_content

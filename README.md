@@ -19,6 +19,8 @@ rails db:migrate
 rails db:seed
 rails db:drop
 
+bundle exec rails db:migrate
+
 
 psql -U postgres -d formula1db
 
@@ -35,6 +37,8 @@ http://localhost:3000/api-docs
 
 
 rails console
+
+rails server 
 
 * Services (job queues, cache servers, search engines, etc.)
 

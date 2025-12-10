@@ -11,15 +11,7 @@ module Api
 
       # GET /circuits/1 or /circuits/1.json
       def show
-      end
-
-      # GET /circuits/new
-      def new
-        @circuit = Circuit.new
-      end
-
-      # GET /circuits/1/edit
-      def edit
+        render json: @circuit
       end
 
       # POST /circuits or /circuits.json
@@ -28,9 +20,9 @@ module Api
 
         respond_to do |format|
           if @circuit.save
-            format.json { render :show, status: :created, location: @circuit }
+            render json: @circuit, status: :created
           else
-            format.json { render json: @circuit.errors, status: :unprocessable_entity }
+            render json: { errors: @circuit.errors }, status: :unprocessable_entity
           end
         end
       end
@@ -39,9 +31,9 @@ module Api
       def update
         respond_to do |format|
           if @circuit.update(circuit_params)
-            format.json { render :show, status: :ok, location: @circuit }
+            render json: @circuit
           else
-            format.json { render json: @circuit.errors, status: :unprocessable_entity }
+            render json: { errors: @circuit.errors }, status: :unprocessable_entity
           end
         end
       end
@@ -63,7 +55,7 @@ module Api
 
         # Only allow a list of trusted parameters through.
         def circuit_params
-          params.require(circuit: [ :name, :location ])
+          params.require(:circuit).permit(:name, :location, :length_km)
         end
     end
   end
