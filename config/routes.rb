@@ -6,20 +6,20 @@ Rails.application.routes.draw do
   # Root redirects to API documentation
   root to: redirect('/api-docs')
 
+  # Devise routes for API
+  devise_for :users,
+    path: 'api/v1/auth',
+    skip: :all
+
   namespace :api do
     namespace :v1 do
-      devise_for :users,
-        path: "auth",
-        path_names: {
-          sign_in: "login",
-          sign_out: "logout",
-          registration: "register"
-        },
-        controllers: {
-          sessions: "api/v1/users/sessions",
-          registrations: "api/v1/users/registrations"
-        },
-        skip: [:sessions, :registrations]
+      # Custom authentication routes
+      devise_scope :user do
+        post "auth/register", to: "users/registrations#create", as: :user_registration
+        post "auth/login", to: "users/sessions#create", as: :user_session
+        delete "auth/logout", to: "users/sessions#destroy"
+      end
+      
       resources :drivers
       resources :circuits
       resources :lap_times do
