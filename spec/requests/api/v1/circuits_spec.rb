@@ -48,7 +48,7 @@ RSpec.describe 'Circuits API', type: :request do
       tags 'Circuits'
       response '200', 'OK' do
         schema ApiSchemas::Circuit
-        let(:id) { Circuit.create!(name: 'Spa').id }
+        let(:id) { Circuit.create!(name: 'Spa', location: 'Belgium').id }
         run_test!
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe 'Circuits API', type: :request do
       tags 'Circuits'
       consumes 'application/json'
       response '200', 'Updated' do
-        let(:id) { Circuit.create!(name: 'Silverstone').id }
+        let(:id) { Circuit.create!(name: 'Silverstone', location: 'UK').id }
         let(:circuit) { { length_km: 5.9 } }
         run_test!
       end
@@ -66,7 +66,7 @@ RSpec.describe 'Circuits API', type: :request do
     delete 'Delete circuit' do
       tags 'Circuits'
       response '204', 'Deleted' do
-        let(:id) { Circuit.create!(name: 'Interlagos').id }
+        let(:id) { Circuit.create!(name: 'Interlagos', location: 'Brazil').id }
         run_test!
       end
     end

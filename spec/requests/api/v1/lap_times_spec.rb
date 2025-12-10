@@ -3,6 +3,9 @@ require 'swagger_helper'
 RSpec.describe 'Lap Times API', type: :request do
   include ApiSchemas
 
+  let!(:driver) { Driver.create!(name: 'Lewis Hamilton', code: 'HAM') }
+  let!(:circuit) { Circuit.create!(name: 'Silverstone', location: 'UK') }
+
   path '/api/v1/lap_times' do
     get 'List all lap times' do
       tags 'Lap Times'
@@ -36,7 +39,7 @@ RSpec.describe 'Lap Times API', type: :request do
       }
 
       response '201', 'Created' do
-        let(:lap_time) { { driver_id: 1, circuit_id: 1, time_ms: 80000, lap_number: 1 } }
+        let(:lap_time) { { driver_id: driver.id, circuit_id: circuit.id, time_ms: 80000, lap_number: 1 } }
         run_test!
       end
 
@@ -47,7 +50,7 @@ RSpec.describe 'Lap Times API', type: :request do
     end
   end
 
-  path '/api/v1/drivers/{driver_id}/lap_times' do
+  path '/api/v1/lap_times/{id}' do
     parameter name: :id, in: :path, type: :integer
 
     get 'Show lap time' do
@@ -56,7 +59,7 @@ RSpec.describe 'Lap Times API', type: :request do
 
       response '200', 'OK' do
         schema ApiSchemas::LapTime
-        let(:id) { LapTime.create!(driver_id: 1, circuit_id: 1, time_ms: 80000, lap_number: 1).id }
+        let(:id) { LapTime.create!(driver_id: driver.id, circuit_id: circuit.id, time_ms: 80000, lap_number: 1).id }
         run_test!
       end
     end
@@ -73,13 +76,13 @@ RSpec.describe 'Lap Times API', type: :request do
       }
 
       response '200', 'Updated' do
-        let(:id) { LapTime.create!(driver_id: 1, circuit_id: 1, time_ms: 70000, lap_number: 1).id }
+        let(:id) { LapTime.create!(driver_id: driver.id, circuit_id: circuit.id, time_ms: 70000, lap_number: 1).id }
         let(:lap_time) { { time_ms: 65000 } }
         run_test!
       end
 
       response '422', 'Invalid' do
-        let(:id) { LapTime.create!(driver_id: 1, circuit_id: 1, time_ms: 70000, lap_number: 1).id }
+        let(:id) { LapTime.create!(driver_id: driver.id, circuit_id: circuit.id, time_ms: 70000, lap_number: 1).id }
         let(:lap_time) { { time_ms: nil } }
         run_test!
       end
@@ -89,7 +92,7 @@ RSpec.describe 'Lap Times API', type: :request do
       tags 'Lap Times'
 
       response '204', 'Deleted' do
-        let(:id) { LapTime.create!(driver_id: 1, circuit_id: 1, time_ms: 70000, lap_number: 1).id }
+        let(:id) { LapTime.create!(driver_id: driver.id, circuit_id: circuit.id, time_ms: 70000, lap_number: 1).id }
         run_test!
       end
     end
@@ -104,7 +107,7 @@ RSpec.describe 'Lap Times API', type: :request do
 
       response '200', 'OK' do
         schema type: :array, items: ApiSchemas::LapTime
-        let(:driver_id) { 1 }
+        let(:driver_id) { driver.id }
         run_test!
       end
     end
@@ -119,7 +122,7 @@ RSpec.describe 'Lap Times API', type: :request do
 
       response '200', 'lap times found' do
         schema type: :array, items: ApiSchemas::LapTime
-        let(:circuit_id) { 1 }
+        let(:circuit_id) { circuit.id }
         run_test!
       end
     end

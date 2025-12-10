@@ -1,13 +1,13 @@
 
 class Api::V1::DriversController < ApplicationController
-  # before_action :authenticate_user!
-  before_action :set_driver, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_driver, only: %i[ show update destroy ]
   respond_to :json
 
   # GET /drivers
   def index
     @drivers = Driver.all
-    render json: drivers, each_serializer: DriverSerializer
+    render json: @drivers, each_serializer: DriverSerializer
   end
 
   # GET /drivers/1
@@ -20,33 +20,26 @@ class Api::V1::DriversController < ApplicationController
   def create
     @driver = Driver.new(driver_params)
 
-    respond_to do |format|
-      if @driver.save
-        render json: @driver, status: :created
-      else
-        render json: { errors: @driver.errors }, status: :unprocessable_entity
-      end
+    if @driver.save
+      render json: @driver, status: :created
+    else
+      render json: { errors: @driver.errors }, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /drivers/1
   def update
-    respond_to do |format|
-      if @driver.update(driver_params)
-        render json: @driver, status: :ok
-      else
-        render json: { errors: @driver.errors }, status: :unprocessable_entity
-      end
+    if @driver.update(driver_params)
+      render json: @driver, status: :ok
+    else
+      render json: { errors: @driver.errors }, status: :unprocessable_entity
     end
   end
 
   # DELETE /drivers/1
   def destroy
     @driver.destroy!
-
-    respond_to do |format|
-      format.json { head :no_content }
-    end
+    head :no_content
   end
 
   private

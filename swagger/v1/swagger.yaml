@@ -11,97 +11,6 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 paths:
-  "/api/v1/lap_times":
-    get:
-      summary: List all lap times
-      tags:
-      - Lap Times
-      parameters:
-      - name: driver_id
-        in: query
-        required: false
-        description: Filter by driver ID
-        schema:
-          type: integer
-      - name: circuit_id
-        in: query
-        required: false
-        description: Filter by circuit ID
-        schema:
-          type: integer
-      - name: lap_min
-        in: query
-        required: false
-        description: Minimum lap number
-        schema:
-          type: integer
-      - name: lap_max
-        in: query
-        required: false
-        description: Maximum lap number
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    driver_id:
-                      type: integer
-                    circuit_id:
-                      type: integer
-                    time_ms:
-                      type: integer
-                    lap_number:
-                      type: integer
-                    created_at:
-                      type: string
-                      format: date-time
-                    updated_at:
-                      type: string
-                      format: date-time
-                  required:
-                  - id
-                  - driver_id
-                  - circuit_id
-                  - time_ms
-                  - lap_number
-    post:
-      summary: Create a lap time
-      tags:
-      - Lap Times
-      parameters: []
-      responses:
-        '201':
-          description: Created
-        '422':
-          description: Unprocessable
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                driver_id:
-                  type: integer
-                circuit_id:
-                  type: integer
-                time_ms:
-                  type: integer
-                lap_number:
-                  type: integer
-              required:
-              - driver_id
-              - circuit_id
-              - time_ms
-              - lap_number
   "/api/v1/circuits":
     get:
       summary: List circuits
@@ -302,17 +211,36 @@ paths:
                 - status
                 - version
                 - timestamp
-  "/api/v1/drivers/{driver_id}/lap_times":
-    parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: integer
+  "/api/v1/lap_times":
     get:
-      summary: List lap times for a driver
+      summary: List all lap times
       tags:
       - Lap Times
+      parameters:
+      - name: driver_id
+        in: query
+        required: false
+        description: Filter by driver ID
+        schema:
+          type: integer
+      - name: circuit_id
+        in: query
+        required: false
+        description: Filter by circuit ID
+        schema:
+          type: integer
+      - name: lap_min
+        in: query
+        required: false
+        description: Minimum lap number
+        schema:
+          type: integer
+      - name: lap_max
+        in: query
+        required: false
+        description: Maximum lap number
+        schema:
+          type: integer
       responses:
         '200':
           description: OK
@@ -320,29 +248,6 @@ paths:
             application/json:
               schema:
                 type: array
-                properties:
-                  id:
-                    type: integer
-                  driver_id:
-                    type: integer
-                  circuit_id:
-                    type: integer
-                  time_ms:
-                    type: integer
-                  lap_number:
-                    type: integer
-                  created_at:
-                    type: string
-                    format: date-time
-                  updated_at:
-                    type: string
-                    format: date-time
-                required:
-                - id
-                - driver_id
-                - circuit_id
-                - time_ms
-                - lap_number
                 items:
                   type: object
                   properties:
@@ -368,12 +273,76 @@ paths:
                   - circuit_id
                   - time_ms
                   - lap_number
-      parameters:
-      - name: driver_id
-        in: path
-        required: true
-        schema:
-          type: integer
+    post:
+      summary: Create a lap time
+      tags:
+      - Lap Times
+      parameters: []
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Unprocessable
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                driver_id:
+                  type: integer
+                circuit_id:
+                  type: integer
+                time_ms:
+                  type: integer
+                lap_number:
+                  type: integer
+              required:
+              - driver_id
+              - circuit_id
+              - time_ms
+              - lap_number
+  "/api/v1/lap_times/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Show lap time
+      tags:
+      - Lap Times
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  driver_id:
+                    type: integer
+                  circuit_id:
+                    type: integer
+                  time_ms:
+                    type: integer
+                  lap_number:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - driver_id
+                - circuit_id
+                - time_ms
+                - lap_number
     patch:
       summary: Update lap time
       tags:
@@ -399,6 +368,49 @@ paths:
       responses:
         '204':
           description: Deleted
+  "/api/v1/drivers/{driver_id}/lap_times":
+    get:
+      summary: List lap times for a driver
+      tags:
+      - Lap Times
+      parameters:
+      - name: driver_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    driver_id:
+                      type: integer
+                    circuit_id:
+                      type: integer
+                    time_ms:
+                      type: integer
+                    lap_number:
+                      type: integer
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                  required:
+                  - id
+                  - driver_id
+                  - circuit_id
+                  - time_ms
+                  - lap_number
   "/api/v1/circuits/{circuit_id}/lap_times":
     get:
       summary: Get lap times for a specific circuit
@@ -442,6 +454,59 @@ paths:
                   - circuit_id
                   - time_ms
                   - lap_number
+  "/api/v1/standings":
+    get:
+      summary: Get driver standings
+      tags:
+      - Standings
+      description: Returns driver standings based on their fastest lap times. Drivers
+        are ranked by their best lap time, with points awarded to the top 10 positions
+        (25, 18, 15, 12, 10, 8, 6, 4, 2, 1).
+      responses:
+        '200':
+          description: standings retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    position:
+                      type: integer
+                      description: Driver position in standings (1st, 2nd, 3rd, etc.)
+                    driver:
+                      type: string
+                      description: Driver name
+                    best_lap:
+                      type: integer
+                      description: Best lap time in milliseconds
+                    points:
+                      type: integer
+                      description: Championship points (25 for 1st, 18 for 2nd, etc.)
+                  required:
+                  - position
+                  - driver
+                  - best_lap
+                  - points
+                example:
+                - position: 1
+                  driver: Lewis Hamilton
+                  best_lap: 85430
+                  points: 25
+                - position: 2
+                  driver: Max Verstappen
+                  best_lap: 85892
+                  points: 18
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   "/api/v1/auth/register":
     post:
       summary: Register a new user
@@ -509,6 +574,19 @@ paths:
           description: logout successful
         '401':
           description: logout failed
+tags:
+- name: Health
+  description: API health check endpoint
+- name: Users
+  description: User authentication and registration endpoints
+- name: Drivers
+  description: F1 driver management endpoints
+- name: Circuits
+  description: F1 circuit management endpoints
+- name: Lap Times
+  description: Lap time tracking and fastest lap endpoints
+- name: Standings
+  description: Driver standings and rankings
 components:
   securitySchemes:
     bearer_auth:
@@ -518,7 +596,11 @@ components:
 security:
 - bearerAuth: []
 servers:
-- url: https://{defaultHost}
+- url: http://localhost:3000
+  description: Development server
+- url: https://{customHost}
+  description: Production server
   variables:
-    defaultHost:
-      default: www.example.com
+    customHost:
+      default: your-production-domain.com
+      description: Your production API domain

@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
+  # API Documentation
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
+
+  # Root redirects to API documentation
+  root to: redirect('/api-docs')
 
   namespace :api do
     namespace :v1 do
@@ -9,11 +13,13 @@ Rails.application.routes.draw do
         path_names: {
           sign_in: "login",
           sign_out: "logout",
-          registration: "register" },
+          registration: "register"
+        },
         controllers: {
           sessions: "api/v1/users/sessions",
           registrations: "api/v1/users/registrations"
-        }
+        },
+        skip: [:sessions, :registrations]
       resources :drivers
       resources :circuits
       resources :lap_times do
@@ -23,6 +29,7 @@ Rails.application.routes.draw do
       end
 
       get "standings", to: "standings#index"
+      get "health", to: "health#index"
     end
   end
 
@@ -40,5 +47,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "home#index"
+  # root "home#index"
 end

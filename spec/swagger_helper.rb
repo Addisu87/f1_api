@@ -31,6 +31,32 @@ RSpec.configure do |config|
         }
       },
       paths: {},
+      tags: [
+        {
+          name: 'Health',
+          description: 'API health check endpoint'
+        },
+        {
+          name: 'Users',
+          description: 'User authentication and registration endpoints'
+        },
+        {
+          name: 'Drivers',
+          description: 'F1 driver management endpoints'
+        },
+        {
+          name: 'Circuits',
+          description: 'F1 circuit management endpoints'
+        },
+        {
+          name: 'Lap Times',
+          description: 'Lap time tracking and fastest lap endpoints'
+        },
+        {
+          name: 'Standings',
+          description: 'Driver standings and rankings'
+        }
+      ],
       components: {
         securitySchemes: {
           bearer_auth: {
@@ -43,10 +69,16 @@ RSpec.configure do |config|
       security: [ { bearerAuth: [] } ],
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: 'http://localhost:3000',
+          description: 'Development server'
+        },
+        {
+          url: 'https://{customHost}',
+          description: 'Production server',
           variables: {
-            defaultHost: {
-              default: 'www.example.com'
+            customHost: {
+              default: 'your-production-domain.com',
+              description: 'Your production API domain'
             }
           }
         }

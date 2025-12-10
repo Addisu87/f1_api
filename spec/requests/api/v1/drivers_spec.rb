@@ -52,7 +52,7 @@ RSpec.describe 'Drivers API', type: :request do
       tags 'Drivers'
       response '200', 'OK' do
         schema ApiSchemas::Driver
-        let(:id) { Driver.create!(name: 'Max Verstappen').id }
+        let(:id) { Driver.create!(name: 'Max Verstappen', code: 'VER').id }
         run_test!
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe 'Drivers API', type: :request do
       consumes 'application/json'
 
       response '200', 'Updated' do
-        let(:id) { Driver.create!(name: 'Charles Leclerc').id }
+        let(:id) { Driver.create!(name: 'Charles Leclerc', code: 'LEC').id }
         let(:driver) { { team: 'Ferrari' } }
         run_test!
       end
@@ -71,7 +71,7 @@ RSpec.describe 'Drivers API', type: :request do
     delete 'Delete driver' do
       tags 'Drivers'
       response '204', 'Deleted' do
-        let(:id) { Driver.create!(name: 'Lando Norris').id }
+        let(:id) { Driver.create!(name: 'Lando Norris', code: 'NOR').id }
         run_test!
       end
     end

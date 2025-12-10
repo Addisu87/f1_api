@@ -39,8 +39,14 @@ http://localhost:3000/api-docs
 - to debug your app
   rails console
 
-* Services (job queues, cache servers, search engines, etc.)
+* to check routes
+  rails routes
 
-* Deployment instructions
+ps aux | grep puma | grep f1_api
+pkill -9 -f "puma.\*f1_api"
 
-* ...
+- Services (job queues, cache servers, search engines, etc.)
+
+- Deployment instructions
+
+- ...

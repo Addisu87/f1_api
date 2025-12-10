@@ -1,4 +1,6 @@
-class API::V1::StandingsController < ApplicationController
+class Api::V1::StandingsController < ApplicationController
+  before_action :authenticate_user!
+  
   POINTS = [ 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 ]
 
   def index
