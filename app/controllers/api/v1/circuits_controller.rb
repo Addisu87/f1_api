@@ -1,4 +1,3 @@
-
 class Api::V1::CircuitsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_circuit, only: %i[ show update destroy ]

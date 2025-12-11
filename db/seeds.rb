@@ -7,39 +7,74 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+#
 
-require "faker"
+puts "Seeding database..."
 
-puts "Seeding drivers..."
-8.times do
-  Driver.create!(
-    name: Faker::Sports::FormulaOne.driver,
-    code: Faker::Alphanumeric.alpha(number: 3).upcase,
-    country: Faker::Address.country
-  )
-end
+# ----------------------------
+# Users
+# ----------------------------
+User.destroy_all
+user = User.create!(
+  email: "test@example.com",
+  password: "password123",
+  password_confirmation: "password123"
+)
+puts "Created user: #{user.email}"
 
-puts "Seeding circuits..."
-8.times do
-  Circuit.create!(
-    name: Faker::Sports::FormulaOne.location,
-    location: Faker::Address.city
-  )
-end
+# ----------------------------
+# Drivers
+# ----------------------------
+Driver.destroy_all
 
-puts "Seeding lap times..."
-drivers = Driver.all
-circuits = Circuit.all
+drivers = Driver.create!([
+  { name: "Lewis Hamilton", code: "HAM", team: "Mercedes", country: "United Kingdom" },
+  { name: "Max Verstappen", code: "VER", team: "Red Bull Racing", country: "Netherlands" },
+  { name: "Charles Leclerc", code: "LEC", team: "Ferrari", country: "Monaco" }
+])
 
-drivers.each do |driver|
-  circuits.sample(10).each do |circuit|
-    rand(15..25).times do |lap|
-      LapTime.create!(
-        driver: driver,
-        circuit: circuit,
-        lap_number: lap + 1,
-        time_ms: rand(65_000..105_000) # 65s–105s
-      )
-    end
-  end
-end
+puts "Created #{drivers.count} drivers."
+
+# ----------------------------
+# Circuits
+# ----------------------------
+Circuit.destroy_all
+
+circuits = Circuit.create!([
+  { name: "Silverstone Circuit", location: "United Kingdom", length_km: 5.891 },
+  { name: "Monza Circuit", location: "Italy", length_km: 5.793 },
+  { name: "Circuit de Monaco", location: "Monaco", length_km: 3.337 }
+])
+
+puts "Created #{circuits.count} circuits."
+
+# ----------------------------
+# Lap Times
+# ----------------------------
+LapTime.destroy_all
+
+lap_times = [
+  { driver: drivers[0], circuit: circuits[0], lap_number: 1, time_ms: 89000 },
+  { driver: drivers[0], circuit: circuits[1], lap_number: 1, time_ms: 87000 },
+
+  { driver: drivers[1], circuit: circuits[0], lap_number: 1, time_ms: 88000 },
+  { driver: drivers[1], circuit: circuits[2], lap_number: 1, time_ms: 72000 },
+
+  { driver: drivers[2], circuit: circuits[1], lap_number: 1, time_ms: 86500 },
+  { driver: drivers[2], circuit: circuits[2], lap_number: 1, time_ms: 73000 }
+]
+
+LapTime.create!(lap_times)
+
+puts "Created #{lap_times.count} lap times."
+
+# ----------------------------
+# Summary
+# ----------------------------
+puts "--------------------------------"
+puts "Seeding completed successfully!"
+puts "Users: #{User.count}"
+puts "Drivers: #{Driver.count}"
+puts "Circuits: #{Circuit.count}"
+puts "Lap Times: #{LapTime.count}"
+puts "--------------------------------"

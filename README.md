@@ -16,7 +16,7 @@ Things you may want to cover:
 
 - Database initialization
   bin/rails db:migrate
-  rails db:seed
+  bin/rails db:seed
   rails db:drop
 
 bundle exec rails db:migrate
@@ -27,6 +27,8 @@ psql -U postgres -d formula1db
   rails generate rspec:install
 
 - Generate swagger docs
+  rails generate rspec:swagger API::MyController
+  rails generate rspec:swagger Api::V1::LapTimesController --spec_path integration
   bundle exec rspec
   bundle exec rake rswag:specs:swaggerize
 
