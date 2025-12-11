@@ -13,4 +13,26 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :email, :password, :password_confirmation ])
   end
+
+  # Override authenticate_user! to enforce JWT authentication for API
+  def authenticate_user!(opts = {})
+    # Require Authorization header with Bearer token
+    auth_header = request.headers['Authorization']
+    
+    if auth_header.blank? || !auth_header.start_with?('Bearer ')
+      render json: {
+        error: 'Unauthorized',
+        message: 'Missing or invalid authentication token'
+      }, status: :unauthorized
+      return
+    end
+    
+    # Authenticate using Warden JWT strategy
+    warden.authenticate!(scope: :user, strategy: :jwt_authenticatable)
+  rescue Warden::NotAuthenticated
+    render json: {
+      error: 'Unauthorized',
+      message: 'Invalid or expired authentication token'
+    }, status: :unauthorized
+  end
 end

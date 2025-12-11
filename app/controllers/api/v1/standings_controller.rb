@@ -1,5 +1,4 @@
 class Api::V1::StandingsController < Api::V1::BaseController
-  
   POINTS = [ 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 ]
 
   def index

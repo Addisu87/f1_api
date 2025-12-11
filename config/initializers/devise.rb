@@ -94,10 +94,8 @@ Devise.setup do |config|
 
   # By default Devise will store the user in session. You can skip storage for
   # particular strategies by setting this option.
-  # Notice that if you are skipping storage for all authentication paths, you
-  # may want to disable generating routes to Devise's sessions controller by
-  # passing skip: :sessions to `devise_for` in your config/routes.rb
-  config.skip_session_storage = [:http_auth]
+  # For JWT-only API, skip session storage for all strategies since we use tokens
+  config.skip_session_storage = [:http_auth, :database]
 
   # By default, Devise cleans up the CSRF token on authentication to
   # avoid CSRF token fixation attacks. This means that, when using AJAX
@@ -259,11 +257,9 @@ Devise.setup do |config|
   # :html should redirect to the sign in page when the user does not have
   # access, but formats like :xml or :json, should return 401.
   #
-  # If you have any extra navigational formats, like :iphone or :mobile, you
-  # should add them to the navigational formats lists.
-  #
-  # The "*/*" below is required to match Internet Explorer requests.
-  # config.navigational_formats = ['*/*', :html, :turbo_stream]
+  # For API-only applications, JSON should not be treated as navigational
+  # to prevent redirects and return proper 401 status codes
+  config.navigational_formats = []
 
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
@@ -275,15 +271,10 @@ Devise.setup do |config|
 
   # ==> Warden configuration
   # Configure Warden for API authentication
-  # Following Devise best practices: https://github.com/heartcombo/devise
+  # JWT strategy is automatically used when :jwt_authenticatable is enabled in User model
   config.warden do |manager|
-    manager.failure_app = ->(env) do
-      [
-        401,
-        { 'Content-Type' => 'application/json' },
-        [{ error: 'Unauthorized', message: 'Invalid or missing authentication token' }.to_json]
-      ]
-    end
+    # Set JWT strategy as the default for API requests
+    manager.default_strategies(scope: :user).unshift(:jwt_authenticatable)
   end
 
   # ==> Mountable engine configurations
