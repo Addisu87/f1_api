@@ -5,21 +5,20 @@ require 'jwt'
 class Api::V1::Users::SessionsController < Devise::SessionsController
   respond_to :json
   
-  # Skip Devise's require_no_authentication filter for APIs
-  # APIs should allow login even if user is already authenticated (to get fresh token)
+  # Allow login even if already authenticated (to get fresh token)
   skip_before_action :require_no_authentication, only: [:create]
   skip_before_action :verify_signed_out_user, only: [:destroy]
 
   # POST /api/v1/auth/login
+  # Following Devise patterns: https://github.com/heartcombo/devise
   def create
     self.resource = warden.authenticate!(auth_options)
-    set_flash_message!(:notice, :signed_in)
     sign_in(resource_name, resource)
     
-    # Generate JWT token (same way devise-jwt does it)
+    # Generate JWT token using Devise's JWT configuration from devise.rb
     jwt_token = generate_jwt_token(resource)
     
-    # Return JSON with token in body for easy copy-paste in Swagger UI
+    # Return token in response body for API clients
     render json: {
       message: "Welcome, you're in",
       user: {
@@ -38,29 +37,51 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
 
   # DELETE /api/v1/auth/logout
   def destroy
-    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-    set_flash_message!(:notice, :signed_out) if signed_out
-    
+    revoke_jwt_token
+    sign_out(resource_name)
     render json: { message: "You've logged out" }, status: :ok
   end
 
   private
 
   def generate_jwt_token(user)
-    # Generate JWT token using the same secret and expiration as devise-jwt
+    # Use Devise JWT configuration from config/initializers/devise.rb
+    jti = SecureRandom.uuid
     payload = {
-      sub: user.id,
+      sub: user.id.to_s,
+      jti: jti,
       exp: 24.hours.from_now.to_i
     }
     JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
   end
 
-  def respond_with(resource, _opts = {})
-    # This method is called by Devise, but we handle response in create action
-    # Keeping for compatibility
+  def revoke_jwt_token
+    token = extract_token_from_header
+    return unless token
+    
+    payload = decode_jwt_token(token)
+    return unless payload['jti']
+    
+    JwtDenylist.find_or_create_by(jti: payload['jti']) do |entry|
+      entry.exp = Time.at(payload['exp']) if payload['exp']
+    end
+  rescue JWT::DecodeError, JWT::ExpiredSignature
+    # Token invalid/expired, but logout still succeeds
   end
 
-  def respond_to_on_destroy
-    # Handled in destroy action
+  def extract_token_from_header
+    auth_header = request.headers['Authorization']
+    return nil unless auth_header
+    auth_header.start_with?('Bearer ') ? auth_header.split(' ').last : auth_header
+  end
+
+  def decode_jwt_token(token)
+    decoded = JWT.decode(
+      token,
+      Rails.application.credentials.secret_key_base,
+      true,
+      { algorithm: 'HS256' }
+    )
+    decoded[0]
   end
 end

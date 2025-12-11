@@ -1,7 +1,5 @@
-class Api::V1::LapTimesController < ApplicationController
-  before_action :authenticate_user!
+class Api::V1::LapTimesController < Api::V1::BaseController
   before_action :set_lap_time, only: %i[ show update destroy ]
-  respond_to :json
 
   # GET /lap_times
   def index

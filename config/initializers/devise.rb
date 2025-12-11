@@ -274,13 +274,17 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
   # ==> Warden configuration
-  # If you want to use other strategies, that are not supported by Devise, or
-  # change the failure app, you can configure them inside the config.warden block.
-  #
-  # config.warden do |manager|
-  #   manager.intercept_401 = false
-  #   manager.default_strategies(scope: :user).unshift :some_external_strategy
-  # end
+  # Configure Warden for API authentication
+  # Following Devise best practices: https://github.com/heartcombo/devise
+  config.warden do |manager|
+    manager.failure_app = ->(env) do
+      [
+        401,
+        { 'Content-Type' => 'application/json' },
+        [{ error: 'Unauthorized', message: 'Invalid or missing authentication token' }.to_json]
+      ]
+    end
+  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
@@ -321,5 +325,9 @@ Devise.setup do |config|
       ['DELETE', %r{^/api/v1/auth/logout$}]
     ]
     jwt.expiration_time = 24.hours.to_i
+    # Request formats that should trigger JWT dispatch/revocation
+    jwt.request_formats = {
+      user: [:json]
+    }
   end
 end

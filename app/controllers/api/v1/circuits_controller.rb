@@ -1,7 +1,5 @@
-class Api::V1::CircuitsController < ApplicationController
-    before_action :authenticate_user!
+class Api::V1::CircuitsController < Api::V1::BaseController
     before_action :set_circuit, only: %i[ show update destroy ]
-    respond_to :json
 
     # GET /circuits or /circuits.json
     def index
