@@ -79,11 +79,12 @@ RSpec.describe "Users API", type: :request do
     delete "Logout user" do
       tags "Users"
       produces "application/json"
+      security [bearerAuth: []]
 
       response "200", "logout successful" do
-        # We need a logged-in user for this
         let(:user_record) { User.create!(email: "test@example.com", password: "123456") }
-        let(:Authorization) { "Bearer #{JWT.encode({ sub: user_record.id }, Rails.application.credentials.secret_key_base)}" }
+        let(:token) { generate_jwt_token(user_record) }
+        let(:Authorization) { "Bearer #{token}" }
 
         run_test! do |response|
           data = JSON.parse(response.body)

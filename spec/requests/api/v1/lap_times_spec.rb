@@ -3,6 +3,9 @@ require 'swagger_helper'
 RSpec.describe 'Lap Times API', type: :request do
   include ApiSchemas
 
+  let(:user) { User.create!(email: 'test@example.com', password: '123456') }
+  let(:token) { generate_jwt_token(user) }
+  let(:Authorization) { "Bearer #{token}" }
   let!(:driver) { Driver.create!(name: 'Lewis Hamilton', code: 'HAM') }
   let!(:circuit) { Circuit.create!(name: 'Silverstone', location: 'UK') }
 
@@ -10,6 +13,7 @@ RSpec.describe 'Lap Times API', type: :request do
     get 'List all lap times' do
       tags 'Lap Times'
       produces 'application/json'
+      security [bearerAuth: []]
 
       parameter name: :driver_id, in: :query, type: :integer, required: false, description: 'Filter by driver ID'
       parameter name: :circuit_id, in: :query, type: :integer, required: false, description: 'Filter by circuit ID'
@@ -26,6 +30,7 @@ RSpec.describe 'Lap Times API', type: :request do
       tags 'Lap Times'
       consumes 'application/json'
       produces 'application/json'
+      security [bearerAuth: []]
 
       parameter name: :lap_time, in: :body, schema: {
         type: :object,

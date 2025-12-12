@@ -16,6 +16,8 @@ paths:
       summary: List circuits
       tags:
       - Circuits
+      security:
+      - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -48,6 +50,8 @@ paths:
       summary: Create circuit
       tags:
       - Circuits
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -102,6 +106,8 @@ paths:
       summary: List drivers
       tags:
       - Drivers
+      security:
+      - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -136,6 +142,8 @@ paths:
       summary: Create driver
       tags:
       - Drivers
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -216,6 +224,8 @@ paths:
       summary: List all lap times
       tags:
       - Lap Times
+      security:
+      - bearerAuth: []
       parameters:
       - name: driver_id
         in: query
@@ -277,6 +287,8 @@ paths:
       summary: Create a lap time
       tags:
       - Lap Times
+      security:
+      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -459,6 +471,8 @@ paths:
       summary: Get driver standings
       tags:
       - Standings
+      security:
+      - bearerAuth: []
       description: Returns driver standings based on their fastest lap times. Drivers
         are ranked by their best lap time, with points awarded to the top 10 positions
         (25, 18, 15, 12, 10, 8, 6, 4, 2, 1).
@@ -569,6 +583,8 @@ paths:
       summary: Logout user
       tags:
       - Users
+      security:
+      - bearerAuth: []
       responses:
         '200':
           description: logout successful
