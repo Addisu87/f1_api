@@ -5,6 +5,7 @@ RSpec.describe 'Health API', type: :request do
     get 'Get API health status' do
       tags 'Health'
       produces 'application/json'
+      security []  # Override global security - health check is public
 
       response '200', 'health status' do
         schema type: :object,

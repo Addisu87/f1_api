@@ -5,13 +5,13 @@ RSpec.describe 'Drivers API', type: :request do
 
   let(:user) { User.create!(email: 'test@example.com', password: '123456') }
   let(:token) { generate_jwt_token(user) }
-  let(:Authorization) { "Bearer #{token}" }
 
   path '/api/v1/drivers' do
+    let(:Authorization) { "Bearer #{token}" }
+
     get 'List drivers' do
       tags 'Drivers'
       produces 'application/json'
-      security [bearerAuth: []]
 
       response '200', 'OK' do
         schema type: :array, items: ApiSchemas::Driver
@@ -23,7 +23,6 @@ RSpec.describe 'Drivers API', type: :request do
       tags 'Drivers'
       consumes 'application/json'
       produces 'application/json'
-      security [bearerAuth: []]
 
       parameter name: :driver, in: :body, schema: {
         type: :object,
@@ -53,6 +52,7 @@ RSpec.describe 'Drivers API', type: :request do
 
   path '/api/v1/drivers/{id}' do
     parameter name: :id, in: :path, type: :integer
+    let(:Authorization) { "Bearer #{token}" }
 
     get 'Show driver' do
       tags 'Drivers'

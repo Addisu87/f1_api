@@ -3,38 +3,38 @@ require 'swagger_helper'
 RSpec.describe 'Standings API', type: :request do
   let(:user) { User.create!(email: 'test@example.com', password: '123456') }
   let(:token) { generate_jwt_token(user) }
-  let(:Authorization) { "Bearer #{token}" }
 
   path '/api/v1/standings' do
+    let(:Authorization) { "Bearer #{token}" }
+
     get 'Get driver standings' do
       tags 'Standings'
       produces 'application/json'
-      security [bearerAuth: []]
       description 'Returns driver standings based on their fastest lap times. Drivers are ranked by their best lap time, with points awarded to the top 10 positions (25, 18, 15, 12, 10, 8, 6, 4, 2, 1).'
-      
+
       response '200', 'standings retrieved' do
         schema type: :array,
           items: {
             type: :object,
             properties: {
-              position: { 
+              position: {
                 type: :integer,
                 description: 'Driver position in standings (1st, 2nd, 3rd, etc.)'
               },
-              driver: { 
+              driver: {
                 type: :string,
                 description: 'Driver name'
               },
-              best_lap: { 
+              best_lap: {
                 type: :integer,
                 description: 'Best lap time in milliseconds'
               },
-              points: { 
+              points: {
                 type: :integer,
                 description: 'Championship points (25 for 1st, 18 for 2nd, etc.)'
               }
             },
-            required: ['position', 'driver', 'best_lap', 'points']
+            required: [ 'position', 'driver', 'best_lap', 'points' ]
           },
           example: [
             {
@@ -62,11 +62,10 @@ RSpec.describe 'Standings API', type: :request do
           properties: {
             error: { type: :string }
           }
-        
+
         let(:Authorization) { '' }
         run_test!
       end
     end
   end
 end
-

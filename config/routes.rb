@@ -4,11 +4,11 @@ Rails.application.routes.draw do
   mount Rswag::Api::Engine => "/api-docs"
 
   # Root redirects to API documentation
-  root to: redirect('/api-docs')
+  root to: redirect("/api-docs")
 
   # Devise routes for API
   devise_for :users,
-    path: 'api/v1/auth',
+    path: "api/v1/auth",
     skip: :all
 
   namespace :api do
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
         post "auth/login", to: "users/sessions#create", as: :user_session
         delete "auth/logout", to: "users/sessions#destroy"
       end
-      
+
       resources :drivers
       resources :circuits
       resources :lap_times do

@@ -5,9 +5,28 @@ Rswag::Api.configure do |c|
   # that it's configured to generate files in the same folder
   c.openapi_root = Rails.root.to_s + "/swagger"
 
-  # Inject a lambda function to alter the returned Swagger prior to serialization
-  # The function will have access to the rack env for the current request
-  # For example, you could leverage this to dynamically assign the "host" property
-  #
-  # c.swagger_filter = lambda { |swagger, env| swagger['host'] = env['HTTP_HOST'] }
+  # Filter to sanitize any real JWT tokens that might have been captured
+  # Remove actual Bearer tokens so users must enter their own
+  c.swagger_filter = lambda do |swagger, env|
+    # Recursively sanitize any JWT tokens in the swagger document
+    def sanitize_swagger(obj)
+      case obj
+      when Hash
+        obj.transform_values { |v| sanitize_swagger(v) }
+      when Array
+        obj.map { |v| sanitize_swagger(v) }
+      when String
+        # Remove any JWT tokens (Bearer followed by long base64 string)
+        if obj.match?(/Bearer\s+eyJ[A-Za-z0-9_-]{20,}/)
+          ""  # Empty value - user must enter their own token
+        else
+          obj
+        end
+      else
+        obj
+      end
+    end
+
+    sanitize_swagger(swagger)
+  end
 end

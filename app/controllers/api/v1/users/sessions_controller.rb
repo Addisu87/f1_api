@@ -2,19 +2,19 @@
 
 class Api::V1::Users::SessionsController < Devise::SessionsController
   respond_to :json
-  
+
   # Allow login even if already authenticated (to get fresh token)
-  skip_before_action :require_no_authentication, only: [:create]
-  skip_before_action :verify_signed_out_user, only: [:destroy]
+  skip_before_action :require_no_authentication, only: [ :create ]
+  skip_before_action :verify_signed_out_user, only: [ :destroy ]
 
   # POST /api/v1/auth/login
   def create
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
-    
+
     # Generate JWT token using Devise JWT's encoder (reuses Devise configuration)
     jwt_token = generate_jwt_token
-    
+
     render json: {
       message: "Welcome, you're in",
       user: {

@@ -62,7 +62,8 @@ RSpec.configure do |config|
           bearer_auth: {
             type: :http,
             scheme: :bearer,
-            bearerFormat: 'JWT'
+            bearerFormat: 'JWT',
+            description: 'JWT token obtained from /api/v1/auth/login endpoint. Format: Bearer {token}'
           }
         }
       },
@@ -91,4 +92,16 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  # Post-process generated Swagger file to remove any real JWT tokens
+  # Replace with empty value so users must enter their own token
+  config.after(:suite) do
+    swagger_file = Rails.root.join('swagger', 'v1', 'swagger.yaml')
+    if File.exist?(swagger_file)
+      content = File.read(swagger_file)
+      # Remove any real JWT tokens - leave empty so users enter their own
+      sanitized = content.gsub(/Bearer\s+eyJ[A-Za-z0-9_-]{20,}/, '')
+      File.write(swagger_file, sanitized) if sanitized != content
+    end
+  end
 end

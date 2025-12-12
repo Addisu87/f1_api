@@ -12,7 +12,7 @@ Rswag::Ui.configure do |c|
 
   # CRITICAL: Override Rswag's restrictive CSP to allow localhost API calls
   c.config_object["cspDisabled"] = true  # Disable Rswag's built-in CSP
-  
+
   # UI configuration options
   c.config_object["defaultModelsExpandDepth"] = 2
   c.config_object["defaultModelExpandDepth"] = 2

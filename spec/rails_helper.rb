@@ -71,4 +71,6 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   Dir[Rails.root.join('./spec/support/**/*.rb')].each { |f| require f }
+  # Load helpers (excluding helper specs)
+  Dir[Rails.root.join('./spec/helpers/*.rb')].each { |f| require f unless f.end_with?('_spec.rb') }
 end

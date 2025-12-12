@@ -1,54 +1,125 @@
-# README
+# 🏁 F1 API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A RESTful API for Formula 1 lap time data and analytics, built with Ruby on Rails 8.1.
 
-Things you may want to cover:
+## 🚀 Quick Start
 
-- Ruby version
+### Prerequisites
+- Ruby 3.3+
+- PostgreSQL
+- Rails 8.1
 
-- System dependencies
+### Setup
+```bash
+# Install dependencies
+bundle install
 
-- Configuration
+# Setup database
+rails db:create
+rails db:migrate
+rails db:seed
 
-- Database creation
-  rails db:create
+# Start server
+rails server
+```
 
-- Database initialization
-  bin/rails db:migrate
-  bin/rails db:seed
-  rails db:drop
-
-bundle exec rails db:migrate
-
-psql -U postgres -d formula1db
-
-- How to run the test suite
-  rails generate rspec:install
-
-- Generate swagger docs
-  rails generate rspec:swagger API::MyController
-  rails generate rspec:swagger Api::V1::LapTimesController --spec_path integration
-  bundle exec rspec
-  bundle exec rake rswag:specs:swaggerize
-
-Then visit:
+### Access API Documentation
+```
 http://localhost:3000/api-docs
+```
 
-- start your app
-  bin/rails server
+## 📚 API Endpoints
 
-- to debug your app
-  rails console
+### Authentication
+- `POST /api/v1/auth/register` - Register new user
+- `POST /api/v1/auth/login` - Login and get JWT token
+- `DELETE /api/v1/auth/logout` - Logout (requires token)
 
-* to check routes
-  rails routes
+### Protected Endpoints (Require JWT Token)
+- `GET /api/v1/drivers` - List drivers
+- `POST /api/v1/drivers` - Create driver
+- `GET /api/v1/drivers/:id` - Show driver
+- `PATCH /api/v1/drivers/:id` - Update driver
+- `DELETE /api/v1/drivers/:id` - Delete driver
 
-ps aux | grep puma | grep f1_api
-pkill -9 -f "puma.\*f1_api"
+- `GET /api/v1/circuits` - List circuits
+- `POST /api/v1/circuits` - Create circuit
+- `GET /api/v1/circuits/:id` - Show circuit
+- `PATCH /api/v1/circuits/:id` - Update circuit
+- `DELETE /api/v1/circuits/:id` - Delete circuit
 
-- Services (job queues, cache servers, search engines, etc.)
+- `GET /api/v1/lap_times` - List lap times
+- `POST /api/v1/lap_times` - Create lap time
+- `GET /api/v1/lap_times/:id` - Show lap time
+- `PATCH /api/v1/lap_times/:id` - Update lap time
+- `DELETE /api/v1/lap_times/:id` - Delete lap time
+- `GET /api/v1/lap_times/fastest` - Get fastest lap
 
-- Deployment instructions
+- `GET /api/v1/standings` - Driver standings
 
-- ...
+### Public Endpoints
+- `GET /api/v1/health` - Health check
+
+## 🔐 Authentication
+
+All protected endpoints require a JWT token in the Authorization header:
+
+```bash
+curl -X GET http://localhost:3000/api/v1/drivers \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+See [docs/SECURITY.md](docs/SECURITY.md) for detailed authentication guide.
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+bundle exec rspec
+
+# Generate Swagger documentation
+bundle exec rake rswag:specs:swaggerize
+```
+
+## 🛠️ Development
+
+### Database
+```bash
+rails db:create
+rails db:migrate
+rails db:seed
+rails db:drop
+```
+
+### Console
+```bash
+rails console
+```
+
+### Routes
+```bash
+rails routes
+```
+
+### Stop Server
+```bash
+pkill -9 -f "puma.*f1_api"
+```
+
+## 📖 Documentation
+
+- [API Reference](docs/API.md) - Complete API endpoint documentation
+- [Security Guide](docs/SECURITY.md) - Authentication and security details
+- [Testing Guide](docs/TESTING.md) - Testing information
+
+## 🏗️ Architecture
+
+- **Framework**: Ruby on Rails 8.1 (API-only)
+- **Authentication**: Devise + JWT
+- **Documentation**: Rswag (Swagger/OpenAPI)
+- **Database**: PostgreSQL
+- **Serializers**: Active Model Serializers
+
+## 📝 License
+
+MIT

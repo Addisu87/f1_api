@@ -1,5 +1,5 @@
 class Api::V1::CircuitsController < Api::V1::BaseController
-  before_action :set_circuit, only: %i[ show update destroy ]
+    before_action :set_circuit, only: %i[ show update destroy ]
 
     # GET /circuits or /circuits.json
     def index

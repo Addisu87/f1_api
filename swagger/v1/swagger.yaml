@@ -16,8 +16,6 @@ paths:
       summary: List circuits
       tags:
       - Circuits
-      security:
-      - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -50,8 +48,6 @@ paths:
       summary: Create circuit
       tags:
       - Circuits
-      security:
-      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -106,8 +102,6 @@ paths:
       summary: List drivers
       tags:
       - Drivers
-      security:
-      - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -142,8 +136,6 @@ paths:
       summary: Create driver
       tags:
       - Drivers
-      security:
-      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -198,6 +190,7 @@ paths:
       summary: Get API health status
       tags:
       - Health
+      security: []
       responses:
         '200':
           description: health status
@@ -224,8 +217,6 @@ paths:
       summary: List all lap times
       tags:
       - Lap Times
-      security:
-      - bearerAuth: []
       parameters:
       - name: driver_id
         in: query
@@ -287,8 +278,6 @@ paths:
       summary: Create a lap time
       tags:
       - Lap Times
-      security:
-      - bearerAuth: []
       parameters: []
       responses:
         '201':
@@ -381,16 +370,16 @@ paths:
         '204':
           description: Deleted
   "/api/v1/drivers/{driver_id}/lap_times":
+    parameters:
+    - name: driver_id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       summary: List lap times for a driver
       tags:
       - Lap Times
-      parameters:
-      - name: driver_id
-        in: path
-        required: true
-        schema:
-          type: integer
       responses:
         '200':
           description: OK
@@ -424,16 +413,16 @@ paths:
                   - time_ms
                   - lap_number
   "/api/v1/circuits/{circuit_id}/lap_times":
+    parameters:
+    - name: circuit_id
+      in: path
+      required: true
+      schema:
+        type: integer
     get:
       summary: Get lap times for a specific circuit
       tags:
       - Lap Times
-      parameters:
-      - name: circuit_id
-        in: path
-        required: true
-        schema:
-          type: integer
       responses:
         '200':
           description: lap times found
@@ -471,8 +460,6 @@ paths:
       summary: Get driver standings
       tags:
       - Standings
-      security:
-      - bearerAuth: []
       description: Returns driver standings based on their fastest lap times. Drivers
         are ranked by their best lap time, with points awarded to the top 10 positions
         (25, 18, 15, 12, 10, 8, 6, 4, 2, 1).
@@ -526,6 +513,7 @@ paths:
       summary: Register a new user
       tags:
       - Users
+      security: []
       parameters: []
       responses:
         '200':
@@ -556,6 +544,7 @@ paths:
       summary: Login user
       tags:
       - Users
+      security: []
       parameters: []
       responses:
         '200':
@@ -583,8 +572,6 @@ paths:
       summary: Logout user
       tags:
       - Users
-      security:
-      - bearerAuth: []
       responses:
         '200':
           description: logout successful
@@ -609,6 +596,8 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: 'JWT token obtained from /api/v1/auth/login endpoint. Format: Bearer
+        {token}'
 security:
 - bearerAuth: []
 servers:

@@ -8,6 +8,7 @@ RSpec.describe "Users API", type: :request do
       tags "Users"
       consumes "application/json"
       produces "application/json"
+      security []  # Override global security - registration is public
       parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
@@ -44,6 +45,7 @@ RSpec.describe "Users API", type: :request do
       tags "Users"
       consumes "application/json"
       produces "application/json"
+      security []  # Override global security - login is public
       parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
@@ -76,16 +78,15 @@ RSpec.describe "Users API", type: :request do
   end
 
   path "/api/v1/auth/logout" do
+    let(:user_record) { User.create!(email: "test@example.com", password: "123456") }
+    let(:token) { generate_jwt_token(user_record) }
+    let(:Authorization) { "Bearer #{token}" }
+
     delete "Logout user" do
       tags "Users"
       produces "application/json"
-      security [bearerAuth: []]
 
       response "200", "logout successful" do
-        let(:user_record) { User.create!(email: "test@example.com", password: "123456") }
-        let(:token) { generate_jwt_token(user_record) }
-        let(:Authorization) { "Bearer #{token}" }
-
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data["message"]).to eq("You've logged out")

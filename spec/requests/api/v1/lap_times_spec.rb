@@ -5,15 +5,15 @@ RSpec.describe 'Lap Times API', type: :request do
 
   let(:user) { User.create!(email: 'test@example.com', password: '123456') }
   let(:token) { generate_jwt_token(user) }
-  let(:Authorization) { "Bearer #{token}" }
   let!(:driver) { Driver.create!(name: 'Lewis Hamilton', code: 'HAM') }
   let!(:circuit) { Circuit.create!(name: 'Silverstone', location: 'UK') }
 
   path '/api/v1/lap_times' do
+    let(:Authorization) { "Bearer #{token}" }
+
     get 'List all lap times' do
       tags 'Lap Times'
       produces 'application/json'
-      security [bearerAuth: []]
 
       parameter name: :driver_id, in: :query, type: :integer, required: false, description: 'Filter by driver ID'
       parameter name: :circuit_id, in: :query, type: :integer, required: false, description: 'Filter by circuit ID'
@@ -30,7 +30,6 @@ RSpec.describe 'Lap Times API', type: :request do
       tags 'Lap Times'
       consumes 'application/json'
       produces 'application/json'
-      security [bearerAuth: []]
 
       parameter name: :lap_time, in: :body, schema: {
         type: :object,
@@ -57,6 +56,7 @@ RSpec.describe 'Lap Times API', type: :request do
 
   path '/api/v1/lap_times/{id}' do
     parameter name: :id, in: :path, type: :integer
+    let(:Authorization) { "Bearer #{token}" }
 
     get 'Show lap time' do
       tags 'Lap Times'
@@ -104,11 +104,12 @@ RSpec.describe 'Lap Times API', type: :request do
   end
 
   path '/api/v1/drivers/{driver_id}/lap_times' do
+    let(:Authorization) { "Bearer #{token}" }
+    parameter name: :driver_id, in: :path, type: :integer
+
     get 'List lap times for a driver' do
       tags 'Lap Times'
       produces 'application/json'
-
-      parameter name: :driver_id, in: :path, type: :integer
 
       response '200', 'OK' do
         schema type: :array, items: ApiSchemas::LapTime
@@ -119,11 +120,12 @@ RSpec.describe 'Lap Times API', type: :request do
   end
 
   path '/api/v1/circuits/{circuit_id}/lap_times' do
+    let(:Authorization) { "Bearer #{token}" }
+    parameter name: :circuit_id, in: :path, type: :integer, required: true
+
     get 'Get lap times for a specific circuit' do
       tags 'Lap Times'
       produces 'application/json'
-
-      parameter name: :circuit_id, in: :path, type: :integer, required: true
 
       response '200', 'lap times found' do
         schema type: :array, items: ApiSchemas::LapTime
