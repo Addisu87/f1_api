@@ -308,7 +308,7 @@ Devise.setup do |config|
     jwt.revocation_requests = [
       [ "DELETE", %r{^/api/v1/auth/logout$} ]
     ]
-    jwt.expiration_time = 24.hours.to_i
+    jwt.expiration_time = 30.minutes.to_i
   end
 
   # ==> Warden configuration
