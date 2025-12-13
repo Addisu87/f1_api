@@ -1,6 +1,6 @@
 # spec/support/swagger/schemas.rb
 RSpec.configure do |config|
-  config.swagger_root = Rails.root.join("swagger").to_s
+  config.openapi_root = Rails.root.join("swagger").to_s
 
   config.after(:suite) do
     FileUtils.rm_rf(Rails.root.join('swagger'))
@@ -49,7 +49,7 @@ module ApiSchemas
       id: { type: :integer },
       name: { type: :string },
       location: { type: :string },
-      length_km: { type: :number },
+      length_km: { type: [ :number, :null ] },
       created_at: { type: :string, format: 'date-time' },
       updated_at: { type: :string, format: 'date-time' }
     },

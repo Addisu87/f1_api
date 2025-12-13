@@ -20,8 +20,12 @@ Rails.application.routes.draw do
         delete "auth/logout", to: "users/sessions#destroy"
       end
 
-      resources :drivers
-      resources :circuits
+      resources :drivers do
+        resources :lap_times, only: [ :index ], controller: "lap_times"
+      end
+      resources :circuits do
+        resources :lap_times, only: [ :index ], controller: "lap_times"
+      end
       resources :lap_times do
         collection do
           get :fastest

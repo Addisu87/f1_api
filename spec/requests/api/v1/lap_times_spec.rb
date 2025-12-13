@@ -3,13 +3,11 @@ require 'swagger_helper'
 RSpec.describe 'Lap Times API', type: :request do
   include ApiSchemas
 
-  let(:user) { User.create!(email: 'test@example.com', password: '123456') }
-  let(:token) { generate_jwt_token(user) }
   let!(:driver) { Driver.create!(name: 'Lewis Hamilton', code: 'HAM') }
   let!(:circuit) { Circuit.create!(name: 'Silverstone', location: 'UK') }
 
   path '/api/v1/lap_times' do
-    let(:Authorization) { "Bearer #{token}" }
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'List all lap times' do
       tags 'Lap Times'
@@ -31,7 +29,7 @@ RSpec.describe 'Lap Times API', type: :request do
       consumes 'application/json'
       produces 'application/json'
 
-      parameter name: :lap_time, in: :body, schema: {
+      parameter name: :lap_time, in: :body, description: 'Lap time data', schema: {
         type: :object,
         properties: {
           driver_id: { type: :integer },
@@ -55,8 +53,8 @@ RSpec.describe 'Lap Times API', type: :request do
   end
 
   path '/api/v1/lap_times/{id}' do
-    parameter name: :id, in: :path, type: :integer
-    let(:Authorization) { "Bearer #{token}" }
+    parameter name: :id, in: :path, type: :integer, description: 'Lap time ID'
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'Show lap time' do
       tags 'Lap Times'
@@ -73,7 +71,7 @@ RSpec.describe 'Lap Times API', type: :request do
       tags 'Lap Times'
 
       consumes 'application/json'
-      parameter name: :lap_time, in: :body, schema: {
+      parameter name: :lap_time, in: :body, description: 'Lap time attributes to update', schema: {
         type: :object,
         properties: {
           time_ms: { type: :integer }
@@ -104,8 +102,8 @@ RSpec.describe 'Lap Times API', type: :request do
   end
 
   path '/api/v1/drivers/{driver_id}/lap_times' do
-    let(:Authorization) { "Bearer #{token}" }
-    parameter name: :driver_id, in: :path, type: :integer
+    let(:Authorization) { "Bearer #{test_token}" }
+    parameter name: :driver_id, in: :path, type: :integer, description: 'Driver ID'
 
     get 'List lap times for a driver' do
       tags 'Lap Times'
@@ -120,8 +118,8 @@ RSpec.describe 'Lap Times API', type: :request do
   end
 
   path '/api/v1/circuits/{circuit_id}/lap_times' do
-    let(:Authorization) { "Bearer #{token}" }
-    parameter name: :circuit_id, in: :path, type: :integer, required: true
+    let(:Authorization) { "Bearer #{test_token}" }
+    parameter name: :circuit_id, in: :path, type: :integer, required: true, description: 'Circuit ID'
 
     get 'Get lap times for a specific circuit' do
       tags 'Lap Times'

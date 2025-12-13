@@ -33,7 +33,9 @@ paths:
                     location:
                       type: string
                     length_km:
-                      type: number
+                      type:
+                      - number
+                      - 'null'
                     created_at:
                       type: string
                       format: date-time
@@ -69,10 +71,12 @@ paths:
               required:
               - name
               - location
+        description: Circuit attributes
   "/api/v1/circuits/{id}":
     parameters:
     - name: id
       in: path
+      description: Circuit ID
       required: true
       schema:
         type: integer
@@ -87,9 +91,19 @@ paths:
       summary: Update circuit
       tags:
       - Circuits
+      parameters: []
       responses:
         '200':
           description: Updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                length_km:
+                  type: number
+        description: Circuit attributes to update
     delete:
       summary: Delete circuit
       tags:
@@ -157,10 +171,12 @@ paths:
               required:
               - name
               - code
+        description: Driver attributes
   "/api/v1/drivers/{id}":
     parameters:
     - name: id
       in: path
+      description: Driver ID
       required: true
       schema:
         type: integer
@@ -175,9 +191,21 @@ paths:
       summary: Update driver
       tags:
       - Drivers
+      parameters: []
       responses:
         '200':
           description: Updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team:
+                  type: string
+                country:
+                  type: string
+        description: Driver attributes to update
     delete:
       summary: Delete driver
       tags:
@@ -303,10 +331,12 @@ paths:
               - circuit_id
               - time_ms
               - lap_number
+        description: Lap time data
   "/api/v1/lap_times/{id}":
     parameters:
     - name: id
       in: path
+      description: Lap time ID
       required: true
       schema:
         type: integer
@@ -362,6 +392,7 @@ paths:
               properties:
                 time_ms:
                   type: integer
+        description: Lap time attributes to update
     delete:
       summary: Delete lap time
       tags:
@@ -373,6 +404,7 @@ paths:
     parameters:
     - name: driver_id
       in: path
+      description: Driver ID
       required: true
       schema:
         type: integer
@@ -417,6 +449,7 @@ paths:
     - name: circuit_id
       in: path
       required: true
+      description: Circuit ID
       schema:
         type: integer
     get:
@@ -539,6 +572,7 @@ paths:
                   - email
                   - password
                   - password_confirmation
+        description: User registration data
   "/api/v1/auth/login":
     post:
       summary: Login user
@@ -567,6 +601,7 @@ paths:
                   required:
                   - email
                   - password
+        description: User login credentials
   "/api/v1/auth/logout":
     delete:
       summary: Logout user
@@ -592,7 +627,7 @@ tags:
   description: Driver standings and rankings
 components:
   securitySchemes:
-    bearer_auth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

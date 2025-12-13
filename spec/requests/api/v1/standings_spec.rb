@@ -1,11 +1,8 @@
 require 'swagger_helper'
 
 RSpec.describe 'Standings API', type: :request do
-  let(:user) { User.create!(email: 'test@example.com', password: '123456') }
-  let(:token) { generate_jwt_token(user) }
-
   path '/api/v1/standings' do
-    let(:Authorization) { "Bearer #{token}" }
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'Get driver standings' do
       tags 'Standings'

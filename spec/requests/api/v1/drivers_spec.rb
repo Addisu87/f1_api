@@ -3,11 +3,8 @@ require 'swagger_helper'
 RSpec.describe 'Drivers API', type: :request do
   include ApiSchemas
 
-  let(:user) { User.create!(email: 'test@example.com', password: '123456') }
-  let(:token) { generate_jwt_token(user) }
-
   path '/api/v1/drivers' do
-    let(:Authorization) { "Bearer #{token}" }
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'List drivers' do
       tags 'Drivers'
@@ -24,7 +21,7 @@ RSpec.describe 'Drivers API', type: :request do
       consumes 'application/json'
       produces 'application/json'
 
-      parameter name: :driver, in: :body, schema: {
+      parameter name: :driver, in: :body, description: 'Driver attributes', schema: {
         type: :object,
         properties: {
           name: { type: :string },
@@ -51,8 +48,8 @@ RSpec.describe 'Drivers API', type: :request do
   end
 
   path '/api/v1/drivers/{id}' do
-    parameter name: :id, in: :path, type: :integer
-    let(:Authorization) { "Bearer #{token}" }
+    parameter name: :id, in: :path, type: :integer, description: 'Driver ID'
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'Show driver' do
       tags 'Drivers'
@@ -66,6 +63,14 @@ RSpec.describe 'Drivers API', type: :request do
     patch 'Update driver' do
       tags 'Drivers'
       consumes 'application/json'
+
+      parameter name: :driver, in: :body, description: 'Driver attributes to update', schema: {
+        type: :object,
+        properties: {
+          team: { type: :string },
+          country: { type: :string }
+        }
+      }
 
       response '200', 'Updated' do
         let(:id) { Driver.create!(name: 'Charles Leclerc', code: 'LEC').id }

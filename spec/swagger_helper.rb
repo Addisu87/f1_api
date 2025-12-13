@@ -59,7 +59,7 @@ RSpec.configure do |config|
       ],
       components: {
         securitySchemes: {
-          bearer_auth: {
+          bearerAuth: {
             type: :http,
             scheme: :bearer,
             bearerFormat: 'JWT',

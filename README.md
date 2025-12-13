@@ -106,6 +106,37 @@ rails routes
 pkill -9 -f "puma.*f1_api"
 ```
 
+# Build and start services
+```bash
+docker-compose up --build
+```
+
+# Run in background
+```bash
+docker-compose up -d
+```
+
+# View logs
+```bash
+docker-compose logs -f web
+```
+
+# Run Rails commands
+```bash
+docker-compose exec web rails console
+docker-compose exec web rails db:migrate
+```
+
+# Stop services
+```bash
+docker-compose down
+```
+
+# Stop and remove volumes (clean slate)
+```bash
+docker-compose down -v
+```
+
 ## 📖 Documentation
 
 - [API Reference](docs/API.md) - Complete API endpoint documentation

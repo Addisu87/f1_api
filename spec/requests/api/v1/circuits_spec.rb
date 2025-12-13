@@ -3,11 +3,8 @@ require 'swagger_helper'
 RSpec.describe 'Circuits API', type: :request do
   include ApiSchemas
 
-  let(:user) { User.create!(email: 'test@example.com', password: '123456') }
-  let(:token) { generate_jwt_token(user) }
-
   path '/api/v1/circuits' do
-    let(:Authorization) { "Bearer #{token}" }
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'List circuits' do
       tags 'Circuits'
@@ -24,7 +21,7 @@ RSpec.describe 'Circuits API', type: :request do
       consumes 'application/json'
       produces 'application/json'
 
-      parameter name: :circuit, in: :body, schema: {
+      parameter name: :circuit, in: :body, description: 'Circuit attributes', schema: {
         type: :object,
         properties: {
           name: { type: :string },
@@ -47,8 +44,8 @@ RSpec.describe 'Circuits API', type: :request do
   end
 
   path '/api/v1/circuits/{id}' do
-    parameter name: :id, in: :path, type: :integer
-    let(:Authorization) { "Bearer #{token}" }
+    parameter name: :id, in: :path, type: :integer, description: 'Circuit ID'
+    let(:Authorization) { "Bearer #{test_token}" }
 
     get 'Show circuit' do
       tags 'Circuits'
@@ -62,6 +59,14 @@ RSpec.describe 'Circuits API', type: :request do
     patch 'Update circuit' do
       tags 'Circuits'
       consumes 'application/json'
+
+      parameter name: :circuit, in: :body, description: 'Circuit attributes to update', schema: {
+        type: :object,
+        properties: {
+          length_km: { type: :number }
+        }
+      }
+
       response '200', 'Updated' do
         let(:id) { Circuit.create!(name: 'Silverstone', location: 'UK').id }
         let(:circuit) { { length_km: 5.9 } }

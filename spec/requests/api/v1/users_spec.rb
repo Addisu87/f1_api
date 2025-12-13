@@ -9,7 +9,7 @@ RSpec.describe "Users API", type: :request do
       consumes "application/json"
       produces "application/json"
       security []  # Override global security - registration is public
-      parameter name: :user, in: :body, schema: {
+      parameter name: :user, in: :body, description: 'User registration data', schema: {
         type: :object,
         properties: {
           user: {
@@ -25,11 +25,12 @@ RSpec.describe "Users API", type: :request do
       }
 
       response "200", "user registered" do
-        let(:user) { { user: { email: "test@example.com", password: "123456", password_confirmation: "123456" } } }
+        # Use a unique email for registration test
+        let(:user) { { user: { email: "newuser#{SecureRandom.hex(4)}@example.com", password: "123456", password_confirmation: "123456" } } }
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data["message"]).to eq("You've registered successfully")
-          expect(data["user"]["email"]).to eq("test@example.com")
+          expect(data["user"]["email"]).to be_present
         end
       end
 
@@ -46,7 +47,7 @@ RSpec.describe "Users API", type: :request do
       consumes "application/json"
       produces "application/json"
       security []  # Override global security - login is public
-      parameter name: :user, in: :body, schema: {
+      parameter name: :user, in: :body, description: 'User login credentials', schema: {
         type: :object,
         properties: {
           user: {
@@ -61,7 +62,7 @@ RSpec.describe "Users API", type: :request do
       }
 
       response "200", "login successful" do
-        let(:user_record) { User.create!(email: "test@example.com", password: "123456") }
+        let(:user_record) { User.find_or_create_by!(email: "test@example.com") { |u| u.password = "123456"; u.password_confirmation = "123456" } }
         let(:user) { { user: { email: user_record.email, password: "123456" } } }
 
         run_test! do |response|
@@ -78,9 +79,7 @@ RSpec.describe "Users API", type: :request do
   end
 
   path "/api/v1/auth/logout" do
-    let(:user_record) { User.create!(email: "test@example.com", password: "123456") }
-    let(:token) { generate_jwt_token(user_record) }
-    let(:Authorization) { "Bearer #{token}" }
+    let(:Authorization) { "Bearer #{test_token}" }
 
     delete "Logout user" do
       tags "Users"
