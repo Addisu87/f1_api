@@ -269,13 +269,6 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
-  # ==> Warden configuration
-  # Configure Warden for API authentication
-  # JWT strategy is automatically used when :jwt_authenticatable is enabled in User model
-  config.warden do |manager|
-    # Set JWT strategy as the default for API requests
-    manager.default_strategies(scope: :user).unshift(:jwt_authenticatable)
-  end
 
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
@@ -316,9 +309,15 @@ Devise.setup do |config|
       [ "DELETE", %r{^/api/v1/auth/logout$} ]
     ]
     jwt.expiration_time = 24.hours.to_i
-    # Request formats that should trigger JWT dispatch/revocation
-    jwt.request_formats = {
-      user: [ :json ]
-    }
+    # Use a consistent audience string for all API tokens
+    jwt.aud = "api/v1"
+  end
+
+  # ==> Warden configuration
+  # Configure Warden strategies for API authentication
+  config.warden do |manager|
+    # Ensure database_authenticatable strategy is available for login
+    manager.default_strategies(scope: :user).unshift(:database_authenticatable)
+    # JWT strategy is automatically registered by devise-jwt gem
   end
 end

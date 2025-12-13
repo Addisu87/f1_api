@@ -3,6 +3,8 @@
 class Api::V1::Users::SessionsController < Devise::SessionsController
   respond_to :json
 
+  # Login does NOT require a token - it's a public endpoint
+  # Users provide email/password and receive a JWT token back
   # Allow login even if already authenticated (to get fresh token)
   skip_before_action :require_no_authentication, only: [ :create ]
   skip_before_action :verify_signed_out_user, only: [ :destroy ]
@@ -11,23 +13,18 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
-
-    # Generate JWT token using Devise JWT's encoder (reuses Devise configuration)
-    jwt_token = generate_jwt_token
+    
+    # Extract JWT token from response headers (Devise JWT automatically generates it)
+    jwt_token = request.env["warden-jwt_auth.token"] || generate_jwt_token
 
     render json: {
       message: "Welcome, you're in",
-      user: {
-        id: resource.id,
-        email: resource.email
-      },
+      user: { id: resource.id, email: resource.email },
       token: jwt_token,
       token_type: "Bearer"
     }, status: :ok
   rescue Warden::NotAuthenticated
-    render json: {
-      message: "Invalid email or password"
-    }, status: :unauthorized
+    render json: { message: "Invalid email or password" }, status: :unauthorized
   end
 
   # DELETE /api/v1/auth/logout
@@ -38,11 +35,10 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
 
   private
 
-  # Generate JWT token using Devise JWT's encoder
-  # This reuses Devise JWT's configured secret and expiration settings
   def generate_jwt_token
-    token, _payload = Warden::JWTAuth::UserEncoder.new.call(resource, :user, request)
-    token
+    # Use the same audience as configured in Devise JWT config
+    aud = Devise::JWT.config.aud || "api/v1"
+    Warden::JWTAuth::UserEncoder.new.call(resource, :user, aud).first
   rescue => e
     Rails.logger.error "Failed to generate JWT token: #{e.message}"
     nil

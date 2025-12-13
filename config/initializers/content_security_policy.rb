@@ -4,19 +4,19 @@
 # See the Securing Rails Applications Guide for more information:
 # https://guides.rubyonrails.org/security.html#content-security-policy-header
 
-# DISABLED IN DEVELOPMENT
-# Rswag has its own CSP that conflicts with Rails CSP
-# Our custom middleware in rswag_csp.rb handles CSP for Swagger UI
-
-Rails.application.config.content_security_policy do |policy|
-  if Rails.env.development?
-    # Allow JS to connect to localhost API
-    policy.default_src :self
-    policy.connect_src :self, "http://localhost:3000"
+# In development, completely disable CSP to allow Swagger UI to work properly
+# Swagger UI needs to make API calls to the same server, and CSP interferes
+# We skip defining the CSP policy entirely in development
+if Rails.env.production?
+  # In production, enforce CSP properly
+  Rails.application.config.content_security_policy do |policy|
+    policy.default_src :self, :https
     policy.font_src    :self, :https, :data
-    policy.img_src     :self, :https, :data, :blob
+    policy.img_src     :self, :https, :data
     policy.object_src  :none
-    policy.script_src  :self, :https, :unsafe_inline
-    policy.style_src   :self, :https, :unsafe_inline
+    policy.script_src  :self, :https
+    policy.style_src   :self, :https
   end
+  
+  Rails.application.config.content_security_policy_report_only = false
 end

@@ -7,7 +7,8 @@
     <meta name="application-name" content="F1 Api">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <%# Only render CSP meta tag in production - disabled in development for Swagger UI %>
+    <%= csp_meta_tag if Rails.env.production? %>
 
     <%= yield :head %>
 
