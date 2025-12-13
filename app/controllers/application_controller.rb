@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   # APIs use JWT tokens for authentication, not CSRF tokens
   skip_before_action :verify_authenticity_token
 
-  # Skip browser checks and importmap for API-only application
   # All routes are API routes or documentation
 
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -20,7 +19,7 @@ class ApplicationController < ActionController::Base
     auth_header = request.headers["Authorization"]
 
     unless auth_header&.start_with?("Bearer ")
-      return render_unauthorized("Missing or invalid authentication token. Please provide a Bearer token in the Authorization header.")
+      return render_unauthorized("Missing or invalid authentication token.")
     end
 
     warden.authenticate!(scope: :user, strategy: :jwt_authenticatable)
