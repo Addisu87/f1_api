@@ -13,9 +13,6 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
-    
-    # Extract JWT token from response headers (Devise JWT automatically generates it)
-    jwt_token = request.env["warden-jwt_auth.token"] || generate_jwt_token
 
     render json: {
       message: "Welcome, you're in",
@@ -35,9 +32,13 @@ class Api::V1::Users::SessionsController < Devise::SessionsController
 
   private
 
+  def jwt_token
+    # Devise JWT automatically generates token when sign_in is called
+    request.env["warden-jwt_auth.token"] || generate_jwt_token
+  end
+
   def generate_jwt_token
-    # Use the same audience as configured in Devise JWT config
-    aud = Devise::JWT.config.aud || "api/v1"
+    aud = resource.jwt_audience(request)
     Warden::JWTAuth::UserEncoder.new.call(resource, :user, aud).first
   rescue => e
     Rails.logger.error "Failed to generate JWT token: #{e.message}"

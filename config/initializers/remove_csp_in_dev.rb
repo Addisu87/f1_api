@@ -9,12 +9,12 @@ if Rails.env.development?
 
     def call(env)
       status, headers, response = @app.call(env)
-      
+
       # Remove CSP-related headers
-      headers.delete('Content-Security-Policy')
-      headers.delete('Content-Security-Policy-Report-Only')
-      
-      [status, headers, response]
+      headers.delete("Content-Security-Policy")
+      headers.delete("Content-Security-Policy-Report-Only")
+
+      [ status, headers, response ]
     end
   end
 

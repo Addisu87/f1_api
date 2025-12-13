@@ -17,6 +17,6 @@ if Rails.env.production?
     policy.script_src  :self, :https
     policy.style_src   :self, :https
   end
-  
+
   Rails.application.config.content_security_policy_report_only = false
 end

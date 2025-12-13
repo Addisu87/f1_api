@@ -19,27 +19,27 @@ class ApplicationController < ActionController::Base
   def authenticate_user!(opts = {})
     auth_header = request.headers["Authorization"]
 
-    if auth_header.blank? || !auth_header.start_with?("Bearer ")
-      render json: {
-        error: "Unauthorized",
-        message: "Missing or invalid authentication token. Please provide a Bearer token in the Authorization header."
-      }, status: :unauthorized
-      return
+    unless auth_header&.start_with?("Bearer ")
+      return render_unauthorized("Missing or invalid authentication token. Please provide a Bearer token in the Authorization header.")
     end
 
-    # Authenticate using Warden JWT strategy
     warden.authenticate!(scope: :user, strategy: :jwt_authenticatable)
   rescue Warden::NotAuthenticated => e
-    Rails.logger.error "JWT Authentication failed: #{e.message}"
-    render json: {
-      error: "Unauthorized",
-      message: "Invalid or expired authentication token"
-    }, status: :unauthorized
+    log_error(e, "JWT Authentication failed")
+    render_unauthorized("Invalid or expired authentication token")
   rescue => e
-    Rails.logger.error "Authentication error: #{e.class} - #{e.message}"
-    render json: {
-      error: "Unauthorized",
-      message: "Authentication failed"
-    }, status: :unauthorized
+    log_error(e, "Authentication error")
+    render_unauthorized("Authentication failed")
+  end
+
+  private
+
+  def render_unauthorized(message)
+    render json: { error: "Unauthorized", message: message }, status: :unauthorized
+  end
+
+  def log_error(error, context)
+    Rails.logger.error "#{context}: #{error.class} - #{error.message}"
+    Rails.logger.error error.backtrace.first(5).join("\n") if error.backtrace
   end
 end

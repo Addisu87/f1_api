@@ -309,8 +309,6 @@ Devise.setup do |config|
       [ "DELETE", %r{^/api/v1/auth/logout$} ]
     ]
     jwt.expiration_time = 24.hours.to_i
-    # Use a consistent audience string for all API tokens
-    jwt.aud = "api/v1"
   end
 
   # ==> Warden configuration
