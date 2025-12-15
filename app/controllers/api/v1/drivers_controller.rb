@@ -47,6 +47,6 @@ class Api::V1::DriversController < Api::V1::BaseController
 
     # Only allow a list of trusted parameters through.
     def driver_params
-      params.require(:driver).permit(:name, :code,  :team, :country)
+      params.require(:driver).permit(:name, :code, :team, :country, :profile_picture)
     end
 end
